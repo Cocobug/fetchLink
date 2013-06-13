@@ -29,6 +29,7 @@ from bs4 import BeautifulSoup
 
 # Constructing url
 t_website="http://safebooru.org/index.php?page=post&s=list"
+t_base_website=t_website[:t_website[7:].find('/')+7]
 t_tag="&tags="
 
 # Fetching new page
@@ -68,7 +69,7 @@ for nb in xrange(start_page,pages_to_process):
 	
 	soup=BeautifulSoup(text,"html5lib")
 	for nb,link,pict in find_next_picture(soup):
-		hAddline(ht,nb,make_link(t_website,link),pict,make_delete_link(t_website,nb))
+		hAddline(ht,nb,make_link(t_website,link),pict,make_delete_link(t_base_website,nb))
 		
 # Finishing
 hFooter(ht)

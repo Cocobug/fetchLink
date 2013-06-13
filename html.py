@@ -16,7 +16,7 @@
 #  GNU General Public License for more details.
 #  
 
-t_dlt="<a href='{}/public/remove.php?id={}&removepost=1&delete=no&reason={}'>Delete</a>"
+t_dlt="<a href='{}/public/remove.php?id={}&amp;removepost=1&amp;delete=no&amp;reason={}' target='_blank'>Delete</a>"
 def make_delete_link(web,pict):
 	return t_dlt.format(web,pict,"Questionnable[script-assised-deletion]")
 
@@ -36,7 +36,7 @@ def hHeader(f):
 def hAddline(f,num,text,pict,delete_link):
 	f.write("""\n<tr>
 		<td> {} </td>
-		<td><a href='{}'> <img src='{}'></a>"</td>
+		<td><a href='{}' target="_blank"> <img src='{}'></a></td>
 		<td> {} </td>
 	</tr>
 """.format(num,text,pict,delete_link))
