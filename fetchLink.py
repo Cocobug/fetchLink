@@ -46,7 +46,7 @@ start_page=parsr.start_page
 
 # Saving results
 save_name=parsr.save_name
-
+print 'Results will be saved in "'+save_name+'"'
 to_fetch=build_request(t_website,t_tag,l_tags)
 
 #########
@@ -58,7 +58,7 @@ hHeader(ht)
 
 # Parsing
 for nb in xrange(start_page,pages_to_process):
-	print "Processing page {} of {}".format(nb+1,pages_to_process)
+	print "  > Processing page {} of {}".format(nb+1,pages_to_process)
 	active=0
 	#print get_page_number(to_fetch,t_npage,nb,post_per_page)
 	r=requests.get(get_page_number(to_fetch,t_npage,nb,post_per_page))
@@ -68,7 +68,7 @@ for nb in xrange(start_page,pages_to_process):
 	#with open(save_name) as r: text=unicode(r.read())
 	
 	soup=BeautifulSoup(text,"html5lib")
-	for nb,link,pict in find_next_picture(soup):
+	for nb,link,pict in find_next_picture(soup,parsr.mx):
 		hAddline(ht,nb,make_link(t_website,link),pict,make_delete_link(t_base_website,nb))
 		
 # Finishing

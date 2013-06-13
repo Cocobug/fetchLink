@@ -29,7 +29,7 @@ def get_page_number(page,txt,nb,post_per_page):
 	if nb==0: return page
 	return page+txt+str(nb*post_per_page)
 
-def find_next_picture(page):
+def find_next_picture(page,img_max):
 	for link in page.find_all("a"):
 		try:
 			lk=link.img#find_next('img',attrs={'class':'preview'})
@@ -39,5 +39,7 @@ def find_next_picture(page):
 				lk=link.get("href")
 				nb=lk[lk.rfind("&")+4:]
 				yield nb,lk,pict
+				if nb in img_max:
+					break
 		except:
 			continue

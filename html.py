@@ -27,10 +27,11 @@ def hClose(name):
 	name.close()
 
 def hHeader(f):
-	f.write("""<!DOCTYPE html><html><body> <center><table border="1" cellpadding="2">
-			<td> # </td>
-		<td>Image</td>
-		<td> Delete link </td>
+	f.write("""<!DOCTYPE html><html><body> <center>
+	<table border="0" cellpadding="20" style="text-align:center; font-family:helvetica;">
+			<th> # </th>
+		<th>Image</th>
+		<th> Delete link </th>
 			""")
 
 def hAddline(f,num,text,pict,delete_link):

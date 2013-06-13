@@ -21,7 +21,7 @@ import sys
 class parseR(object):
 	"It's not an object, just a var container"
 	def __init__(self):
-		self.mx=""
+		self.mx=0
 		self.start_page=0
 		self.max_page=3
 		self.tags=[]
@@ -32,22 +32,21 @@ def parse_vars(args):
 	prs=parseR()
 	try:
 		prs.max_page=int(args[1])
+		for v in args[2:]:
+			if v[0] == '?':
+				prs.mx=v[1:]
+			else:
+				if v[0] == '%':
+					prs.start_page=int(v[1:])
+				else: prs.tags.append(v)
 	except:
 		gtfo()
-	
-	for v in args[2:]:
-		if v[0] == '#':
-			prs.mx=v[1:]
-		else:
-			if v[0] == '&':
-				prs.start_page=int(v[1:])
-			else: prs.tags.append(v)
 	prs.tags.sort()
 	for tag in prs.tags:
 		prs.save_name+='_'+tag
-	prs.save_name+='_{}_{}.html'.format(prs.start_page,prs.max_page)
+	prs.save_name+='_{}_{}.html'.format(prs.start_page+1,prs.max_page)
 	return prs
 
 def gtfo():
-	print "Invalid number of args: Usage ./fetchLink <nbPagesToFetch> <listOfTags> [#imageMax] [&pageToStartWith]"
+	print "Invalid number of args: Usage ./fetchLink <nbPagesToFetch> <listOfTags> [?imageMax] [%pageToStartWith]"
 	sys.exit()
