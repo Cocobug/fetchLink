@@ -16,6 +16,9 @@
 #  GNU General Public License for more details.
 #  
 
+t_dlt="<a href='{}/public/remove.php?id={}&removepost=1&delete=no&reason={}'>Delete</a>"
+def make_delete_link(web,pict):
+	return t_dlt.format(web,pict,"Questionnable[script-assised-deletion]")
 
 def hCreate(name):
 	return open(name,"w+")
@@ -24,10 +27,19 @@ def hClose(name):
 	name.close()
 
 def hHeader(f):
-	f.write("<!DOCTYPE html><html><body> ")
+	f.write("""<!DOCTYPE html><html><body> <center><table border="1" cellpadding="2">
+			<td> # </td>
+		<td>Image</td>
+		<td> Delete link </td>
+			""")
 
-def hAddline(f,text,pict):
-	f.write("\n<a href='{}'> <img src='{}'></a>".format(text,pict))
+def hAddline(f,num,text,pict,delete_link):
+	f.write("""\n<tr>
+		<td> {} </td>
+		<td><a href='{}'> <img src='{}'></a>"</td>
+		<td> {} </td>
+	</tr>
+""".format(num,text,pict,delete_link))
 
 def hFooter(f):
-	f.write("</body></html>")
+	f.write("</center></table></body></html>")

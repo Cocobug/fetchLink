@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 --
 #
 #  main.py
 #  
@@ -20,28 +20,33 @@ import requests
 import os,sys
 from html import *
 from tools import *
+from parse import *
 
 from bs4 import BeautifulSoup
 
 ############
-# Parameters
+# Website skeleton
 
 # Constructing url
 t_website="http://safebooru.org/index.php?page=post&s=list"
 t_tag="&tags="
-l_tags='ass'.split()
 
 # Fetching new page
+
 t_npage="&pid="
 post_per_page=20
-pages_to_process=3
-start_page=0
+
+############
+# Fetching vars
+parsr=parse_vars(sys.argv)
+l_tags=parsr.tags
+pages_to_process=parsr.max_page
+start_page=parsr.start_page
 
 # Saving results
-save_name="ass.html"
+save_name=parsr.save_name
 
 to_fetch=build_request(t_website,t_tag,l_tags)
-print to_fetch
 
 #########
 # Html creation
@@ -51,10 +56,10 @@ ht=hCreate(save_name)
 hHeader(ht)
 
 # Parsing
-for nb in xrange(star_page,pages_to_process):
+for nb in xrange(start_page,pages_to_process):
 	print "Processing page {} of {}".format(nb+1,pages_to_process)
 	active=0
-	print get_page_number(to_fetch,t_npage,nb,post_per_page)
+	#print get_page_number(to_fetch,t_npage,nb,post_per_page)
 	r=requests.get(get_page_number(to_fetch,t_npage,nb,post_per_page))
 	r.raise_for_status()
 	text=r.text
@@ -62,8 +67,8 @@ for nb in xrange(star_page,pages_to_process):
 	#with open(save_name) as r: text=unicode(r.read())
 	
 	soup=BeautifulSoup(text,"html5lib")
-	for link,pict in find_next_picture(soup):
-		hAddline(ht,make_link(t_website,link),pict)
+	for nb,link,pict in find_next_picture(soup):
+		hAddline(ht,nb,make_link(t_website,link),pict,make_delete_link(t_website,nb))
 		
 # Finishing
 hFooter(ht)

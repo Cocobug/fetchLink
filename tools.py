@@ -16,7 +16,6 @@
 #  GNU General Public License for more details.
 #  
 
-
 def build_request(adress,t_tags,tags):
 	if len(tags)==0: return adress
 	adress+=t_tags+tags.pop()
@@ -25,7 +24,7 @@ def build_request(adress,t_tags,tags):
 
 def make_link(webs,link):
 	return webs+link
-	
+
 def get_page_number(page,txt,nb,post_per_page):
 	if nb==0: return page
 	return page+txt+str(nb*post_per_page)
@@ -35,8 +34,10 @@ def find_next_picture(page):
 		try:
 			lk=link.img#find_next('img',attrs={'class':'preview'})
 			if lk:
+				
 				pict=lk.get('src')
 				lk=link.get("href")
-				yield lk,pict
+				nb=lk[lk.rfind("&")+4:]
+				yield nb,lk,pict
 		except:
 			continue
