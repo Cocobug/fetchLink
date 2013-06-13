@@ -35,6 +35,7 @@ l_tags='ass'.split()
 t_npage="&pid="
 post_per_page=20
 pages_to_process=3
+start_page=0
 
 # Saving results
 save_name="ass.html"
@@ -50,7 +51,7 @@ ht=hCreate(save_name)
 hHeader(ht)
 
 # Parsing
-for nb in xrange(pages_to_process):
+for nb in xrange(star_page,pages_to_process):
 	print "Processing page {} of {}".format(nb+1,pages_to_process)
 	active=0
 	print get_page_number(to_fetch,t_npage,nb,post_per_page)
