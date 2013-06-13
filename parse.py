@@ -45,7 +45,7 @@ def parse_vars(args):
 	prs.tags.sort()
 	for tag in prs.tags:
 		prs.save_name+='_'+tag
-	prs.save_name+='.html'
+	prs.save_name+='_{}_{}.html'.format(prs.start_page,prs.max_page)
 	return prs
 
 def gtfo():
