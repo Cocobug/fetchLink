@@ -19,7 +19,7 @@
 version='0.2a'
 t_dlt="<a href='{}/public/remove.php?id={}&amp;removepost=1&amp;delete=no&amp;reason={}' target='_blank'>Delete</a>"
 def make_delete_link(web,pict):
-	return t_dlt.format(web,pict,("Questionnable - SAD (Script Assisted Deletion) [Via fetchLink.py v"+version+"]"))
+	return t_dlt.format(web,pict,("Questionnable - SAD (Script Assisted Deletion)"))
 
 def hCreate(name):
 	return open(name,"w+")
