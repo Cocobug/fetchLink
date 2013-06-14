@@ -57,20 +57,23 @@ ht=hCreate(save_name)
 hHeader(ht)
 
 # Parsing
-for nb in xrange(start_page,pages_to_process):
-	print "  > Processing page {} of {}".format(nb+1,pages_to_process)
-	active=0
-	#print get_page_number(to_fetch,t_npage,nb,post_per_page)
-	r=requests.get(get_page_number(to_fetch,t_npage,nb,post_per_page))
-	r.raise_for_status()
-	text=r.text
-	
-	#with open(save_name) as r: text=unicode(r.read())
-	
-	soup=BeautifulSoup(text,"html5lib")
-	for nb,link,pict in find_next_picture(soup,parsr.mx):
-		hAddline(ht,nb,make_link(t_website,link),pict,make_delete_link(t_base_website,nb))
+try:
+	for nb in xrange(start_page,pages_to_process):
+		print "  > Processing page {} of {}".format(nb+1,pages_to_process)
+		#print get_page_number(to_fetch,t_npage,nb,post_per_page)
+		r=requests.get(get_page_number(to_fetch,t_npage,nb,post_per_page))
+		r.raise_for_status()
+		text=r.text
 		
+		#with open(save_name) as r: text=unicode(r.read())
+		
+		soup=BeautifulSoup(text,"html5lib")
+		for nb,link,pict in find_next_picture(soup,parsr.mx):
+			hAddline(ht,nb,make_link(t_website,link),pict,make_delete_link(t_base_website,nb))
+			if nb==parsr.mx:
+				raise GTFOError
+except:
+	pass
 # Finishing
 hFooter(ht)
 hClose(ht)

@@ -21,15 +21,20 @@ Configuring
 
 Configuring is (for now only) for programmers, even if quite easy and correctly splitted it remains quite obfustated in a lot of ways.
 
-=== fetchLink ===
+fetchLink
+---------------
+
 Main application
 
-=== Html ===
+Html
+---------------
 The website to get, the methods to construct the result page
 
-=== Parse ===
+Parse
+---------------
 Argument parser
 
-=== Tools ===
+Tools
+---------------
 The tools to find the pictures in webpages, forge the links to dl and so on.
 
