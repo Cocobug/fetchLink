@@ -18,7 +18,7 @@
 
 t_dlt="<a href='{}/public/remove.php?id={}&amp;removepost=1&amp;delete=no&amp;reason={}' target='_blank'>Delete</a>"
 def make_delete_link(web,pict):
-	return t_dlt.format(web,pict,"Questionnable[script-assised-deletion]")
+	return t_dlt.format(web,pict,"Questionnable[script_assisted_deletion]")
 
 def hCreate(name):
 	return open(name,"w+")
