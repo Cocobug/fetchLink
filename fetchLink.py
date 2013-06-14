@@ -26,14 +26,12 @@ from bs4 import BeautifulSoup
 
 ############
 # Website skeleton
-
 # Constructing url
 t_website="http://safebooru.org/index.php?page=post&s=list"
 t_base_website=t_website[:t_website[7:].find('/')+7]
 t_tag="&tags="
 
 # Fetching new page
-
 t_npage="&pid="
 post_per_page=20
 
@@ -43,6 +41,7 @@ parsr=parse_vars(sys.argv)
 l_tags=parsr.tags
 pages_to_process=parsr.max_page
 start_page=parsr.start_page
+check=parsr.check
 
 # Saving results
 save_name=parsr.save_name
@@ -69,6 +68,10 @@ try:
 		
 		soup=BeautifulSoup(text,"html5lib")
 		for nb,link,pict in find_next_picture(soup,parsr.mx):
+			if check:
+				tst=requests.head(pict)
+				if tst.status_code>=300: 
+					continue
 			hAddline(ht,nb,make_link(t_website,link),pict,make_delete_link(t_base_website,nb))
 			if nb==parsr.mx:
 				raise GTFOError

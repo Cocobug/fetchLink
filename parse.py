@@ -26,7 +26,8 @@ class parseR(object):
 		self.max_page=3
 		self.tags=[]
 		self.save_name="dl"
-
+		self.check=0
+		
 def parse_vars(args):
 	if len(args)<3: gtfo()
 	prs=parseR()
@@ -38,7 +39,10 @@ def parse_vars(args):
 			else:
 				if v[0] == '%':
 					prs.start_page=int(v[1:])
-				else: prs.tags.append(v)
+				else: 
+					if v[0]=='@':
+						prs.check=1
+					else: prs.tags.append(v)
 	except:
 		gtfo()
 	prs.tags.sort()
@@ -48,5 +52,5 @@ def parse_vars(args):
 	return prs
 
 def gtfo():
-	print "Invalid number of args: Usage ./fetchLink <nbPagesToFetch> <listOfTags> [?imageMax] [%pageToStartWith]"
+	print "Invalid number of args: Usage ./fetchLink <nbPagesToFetch> <listOfTags> [?imageMax] [%pageToStartWith] [@]"
 	sys.exit()
