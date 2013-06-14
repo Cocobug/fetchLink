@@ -28,10 +28,14 @@ def hClose(name):
 	name.close()
 
 def hHeader(f):
-	f.write("""<!DOCTYPE html><html><body> <center>
-	<table border="0" cellpadding="20" style="text-align:center; font-family:helvetica;">
+	f.write("""<!DOCTYPE html><html><body style="font-family:helvetica;""><center>
+	
+	<div style="font-size:42px; padding-top:30px; color:#0000EE;"><b>fetchLink.py</b></div>
+	<div style="font-size:14.2px; padding-bottom:30px;">broken thumbnails means that pictures have already been deleted</div>
+	
+	<table border="0" cellpadding="20" style="text-align:center;">
 			<th> # </th>
-		<th>Image</th>
+		<th>Thumbnail</th>
 		<th> Delete link </th>
 			""")
 
