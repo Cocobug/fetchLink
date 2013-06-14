@@ -18,6 +18,8 @@
 
 import requests
 import os,sys
+import logging
+
 from html import *
 from tools import *
 from parse import *
@@ -50,7 +52,7 @@ to_fetch=build_request(t_website,t_tag,l_tags)
 
 #########
 # Html creation
-
+listIdParsed=[]
 # Initialisation
 ht=hCreate(save_name)
 hHeader(ht)
@@ -72,11 +74,13 @@ try:
 				tst=requests.head(pict)
 				if tst.status_code>=300: 
 					continue
-			hAddline(ht,nb,make_link(t_website,link),pict,make_delete_link(t_base_website,nb))
-			if nb==parsr.mx:
-				raise GTFOError
+			if nb not in listIdParsed:
+				hAddline(ht,nb,make_link(t_website,link),pict,make_delete_link(t_base_website,nb))
+				listIdParsed.append(nb)
+			if nb==parsr.mx: raise GTFOError
 except:
-	pass
+	logging.exception("Unknown error")
+#	pass
 # Finishing
 hFooter(ht)
 hClose(ht)

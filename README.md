@@ -35,11 +35,11 @@ Main application
 
 Html
 ---------------
-The website to get, the methods to construct the result page
+Constructing the result page
 
 Parse
 ---------------
-Argument parser
+Argument parser, simple, ugly but working
 
 Tools
 ---------------

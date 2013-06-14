@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 #  htcreate.py
@@ -28,10 +27,14 @@ def hClose(name):
 	name.close()
 
 def hHeader(f):
-	f.write("""<!DOCTYPE html><html><body style="font-family:helvetica;""><center>
-	
+	f.write("""<!DOCTYPE html><html><body style="font-family:helvetica;"><center>
+	<script type="text/javascript">
+    function imgError(image) {
+        image.parentNode.parentNode.innerHTML="<strike>Picture deleted</strike>";
+        return true;
+    }
+    </script>
 	<div style="font-size:42px; padding-top:30px; color:#0000EE;"><b>fetchLink.py</b></div>
-	<div style="font-size:14.2px; padding-bottom:30px;">broken thumbnails means that pictures have already been deleted</div>
 	
 	<table border="0" cellpadding="20" style="text-align:center;">
 			<th> # </th>
@@ -42,7 +45,7 @@ def hHeader(f):
 def hAddline(f,num,text,pict,delete_link):
 	f.write("""\n<tr>
 		<td> {} </td>
-		<td><a href='{}' target="_blank"> <img src='{}'></a></td>
+		<td><a href='{}' target="_blank"> <img src='{}' onerror="imgError(this);"></a></td>
 		<td> {} </td>
 	</tr>
 """.format(num,text,pict,delete_link))
