@@ -50,6 +50,7 @@ def parse_vars(args,di):
 			prs.tags.append(make_site_compliant(v,di))
 	except:
 		gtfo()
+	prs.max_page+=prs.start_page
 	prs.name_me()
 	return prs
 

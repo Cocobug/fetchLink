@@ -59,4 +59,4 @@ def hAddline(f,num,text,pict,delete_link):
 	""".format(num,text,pict,delete_link))
 
 def hFooter(f):
-	f.write("</center></table></body></html>")
+	f.write("</table><p/><img src='python-powered.png'></center></body></html>")
