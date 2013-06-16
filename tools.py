@@ -17,8 +17,8 @@
 
 def build_request(adress,t_tags,tags):
 	if len(tags)==0: return adress
-	adress+=t_tags+tags.pop()
-	for t in tags:	adress+='+'+t
+	adress+=t_tags+tags[0]
+	for t in tags[1:]:	adress+='+'+t
 	return adress
 
 def make_link(webs,link):

@@ -24,10 +24,15 @@ class parseR(object):
 		self.start_page=0
 		self.max_page=3
 		self.tags=[]
-		self.save_name="dl"
 		self.check=0
-		
-def parse_vars(args):
+	def name_me(self):
+		self.save_name="dl"
+		self.tags.sort()
+		for tag in self.tags:
+			self.save_name+='_'+tag
+		self.save_name+='_{}_{}.html'.format(self.start_page+1,self.max_page)
+
+def parse_vars(args,di):
 	if len(args)<2: gtfo()
 	prs=parseR()
 	try:
@@ -35,21 +40,29 @@ def parse_vars(args):
 		for v in args[2:]:
 			if v[0] == '?':
 				prs.mx=v[1:]
-			else:
-				if v[0] == '%':
-					prs.start_page=int(v[1:])
-				else: 
-					if v[0]=='@':
-						prs.check=1
-					else: prs.tags.append(v)
+				continue
+			if v[0] == '%':
+				prs.start_page=int(v[1:])
+				continue
+			if v[0]=='@':
+				prs.check=1
+				continue
+			prs.tags.append(make_site_compliant(v,di))
 	except:
 		gtfo()
-	prs.tags.sort()
-	for tag in prs.tags:
-		prs.save_name+='_'+tag
-	prs.save_name+='_{}_{}.html'.format(prs.start_page+1,prs.max_page)
+	prs.name_me()
 	return prs
 
+def make_site_compliant(txt,tr_dict):
+	"Dict must assotiate no more than one symbol to a string"
+	res=""
+	for l in txt:
+		try:
+			res+=tr_dict[l]
+		except:
+			res+=l
+	return res
+	
 def gtfo():
 	print "Invalid number of arguments: Usage ./fetchLink <nbPagesToFetch> <listOfTags> [?imageMax] [%pageToStartWith] [@]"
 	sys.exit()

@@ -32,14 +32,14 @@ from bs4 import BeautifulSoup
 t_website="http://safebooru.org/index.php?page=post&s=list"
 t_base_website=t_website[:t_website[7:].find('/')+7]
 t_tag="&tags="
-
+tr_dict={"*":"%2a",">":"%3e","<":"%3c",":":"%3a"}
 # Fetching new page
 t_npage="&pid="
 post_per_page=20
 
 ############
 # Fetching vars
-parsr=parse_vars(sys.argv)
+parsr=parse_vars(sys.argv,tr_dict)
 l_tags=parsr.tags
 pages_to_process=parsr.max_page
 start_page=parsr.start_page
@@ -59,10 +59,10 @@ hHeader(ht)
 
 # Parsing
 try:
-	for nb in xrange(start_page,pages_to_process):
-		print "  > Processing page {} of {}".format(nb+1,pages_to_process)
+	for page_nb in xrange(start_page,pages_to_process):
+		print "  > Processing page {} of {}".format(page_nb+1,pages_to_process)
 		#print get_page_number(to_fetch,t_npage,nb,post_per_page)
-		r=requests.get(get_page_number(to_fetch,t_npage,nb,post_per_page))
+		r=requests.get(get_page_number(to_fetch,t_npage,page_nb,post_per_page))
 		r.raise_for_status()
 		text=r.text
 		
@@ -77,13 +77,21 @@ try:
 			if nb not in listIdParsed:
 				hAddline(ht,nb,make_link(t_website,link),pict,make_delete_link(t_base_website,nb))
 				listIdParsed.append(nb)
-			if nb==parsr.mx: raise GTFOError
+			if nb==parsr.mx: 
+				print "Found {}, exiting search".format(nb)
+				parsr.max_page=page_nb+1
+				parsr.name_me()
+				raise GTFOError
 except GTFOError:
 	pass
+except KeyboardInterrupt:
+	print "Not cool... you killed me dude, NOT cool..."
+	parsr.max_page=page_nb+1
+	parsr.name_me()
 except:
 	logging.exception("Unknown error")
 
 # Finishing
 hFooter(ht)
-hClose(ht)
+hClose(ht,save_name,parsr.save_name)
 

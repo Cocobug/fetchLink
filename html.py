@@ -15,7 +15,7 @@
 #  GNU General Public License for more details.
 #  
 
-import random
+import os,random
 liste_messages=["Have fun.","Good luck.","Courage.","You can do it.","Have fun.","Good luck.","Courage.","You can do it.","Have fun.","Good luck.","Courage.","You can do it.","Have fun.","Good luck.","Courage.","You can do it.","I believe in you.","I have faith in you.","Carry on, you're on the good way.","Carry on, you're on the good way.","Never give up.","Moderators are Safebooru's defensors.","Slayerduck and me are relying on you.","We, the moderation team, are Safebooru's only hope to be totally safe one day.","You're not paid for what you're doing with money, but with all our love.","Carry on privates, you wanna live forever ?","Moderator One Kennoby you are our only hope."]
 message=random.choice(liste_messages)
 
@@ -27,8 +27,11 @@ def make_delete_link(web,pict):
 def hCreate(name):
 	return open(name,"w+")
 
-def hClose(name):
+def hClose(name,oldname,rename):
 	name.close()
+	if rename!=oldname:
+		os.rename(oldname,rename)
+		print "Renamed to",rename
 
 def hHeader(f):
 	f.write("""<!DOCTYPE html><html><body style="font-family:helvetica;"><center>
@@ -39,13 +42,13 @@ def hHeader(f):
     }
     </script>
 	<div style="font-size:42px; padding-top:30px; color:#0000EE;"><b>fetchLink.py</b></div>
-	<div style="font-size:14.2px; padding-bottom:30px;">{message}</div>
+	<div style="font-size:14.2px; padding-bottom:30px;">"""+message+"""</div>
 	
 	<table border="0" cellpadding="20" style="text-align:center;">
 			<th> # </th>
 		<th>Thumbnail</th>
 		<th> Delete link </th>
-	""".format(message=message))
+""")
 
 def hAddline(f,num,text,pict,delete_link):
 	f.write("""\n<tr>
