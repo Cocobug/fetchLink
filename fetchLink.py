@@ -72,7 +72,7 @@ try:
 		for nb,link,pict in find_next_picture(soup,parsr.mx):
 			if check:
 				tst=requests.head(pict)
-				if tst.status_code>=300: 
+				if tst.status_code>=300:
 					continue
 			if nb not in listIdParsed:
 				hAddline(ht,nb,make_link(t_website,link),pict,make_delete_link(t_base_website,nb))
@@ -82,7 +82,7 @@ except GTFOError:
 	pass
 except:
 	logging.exception("Unknown error")
-#	pass
+
 # Finishing
 hFooter(ht)
 hClose(ht)
