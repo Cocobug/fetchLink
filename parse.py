@@ -28,7 +28,7 @@ class parseR(object):
 		self.check=0
 		
 def parse_vars(args):
-	if len(args)<3: gtfo()
+	if len(args)<2: gtfo()
 	prs=parseR()
 	try:
 		prs.max_page=int(args[1])
@@ -51,5 +51,5 @@ def parse_vars(args):
 	return prs
 
 def gtfo():
-	print "Invalid number of args: Usage ./fetchLink <nbPagesToFetch> <listOfTags> [?imageMax] [%pageToStartWith] [@]"
+	print "Invalid number of arguments: Usage ./fetchLink <nbPagesToFetch> <listOfTags> [?imageMax] [%pageToStartWith] [@]"
 	sys.exit()

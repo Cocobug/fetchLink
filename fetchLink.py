@@ -78,6 +78,8 @@ try:
 				hAddline(ht,nb,make_link(t_website,link),pict,make_delete_link(t_base_website,nb))
 				listIdParsed.append(nb)
 			if nb==parsr.mx: raise GTFOError
+except GTFOError:
+	pass
 except:
 	logging.exception("Unknown error")
 #	pass
