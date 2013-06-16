@@ -15,7 +15,7 @@
 #  GNU General Public License for more details.
 #  
 
-import sys
+import sys,os
 
 class parseR(object):
 	"It's not an object, just a var container"
@@ -31,7 +31,7 @@ class parseR(object):
 		for tag in self.tags:
 			self.save_name+='_'+tag
 		self.save_name+='_{}_{}.html'.format(self.start_page+1,self.max_page)
-
+		self.save_name=os.path.join("html",self.save_name)
 def parse_vars(args,di):
 	if len(args)<2: gtfo()
 	prs=parseR()

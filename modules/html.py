@@ -19,12 +19,14 @@ import os,random
 liste_messages=["Have fun.","Good luck.","Courage.","You can do it.","Have fun.","Good luck.","Courage.","You can do it.","Have fun.","Good luck.","Courage.","You can do it.","Have fun.","Good luck.","Courage.","You can do it.","I believe in you.","I have faith in you.","Carry on, you're on the good way.","Carry on, you're on the good way.","Never give up.","Moderators are Safebooru's defensors.","Slayerduck and me are relying on you.","We, the moderation team, are Safebooru's only hope to be totally safe one day.","You're not paid for what you're doing with money, but with all our love.","Carry on privates, you wanna live forever ?","Moderator One Kennoby you are our only hope."]
 message=random.choice(liste_messages)
 
-version='0.2a'
+version='0.3b'
 t_dlt="<a href='{}/public/remove.php?id={}&amp;removepost=1&amp;delete=no&amp;reason={}' target='_blank'>Delete</a>"
 def make_delete_link(web,pict):
 	return t_dlt.format(web,pict,("Questionnable - SAD (Script Assisted Deletion)"))
 
 def hCreate(name):
+	if not os.path.exists("html"):
+		os.mkdir("html")
 	return open(name,"w+")
 
 def hClose(name,oldname,rename):

@@ -20,6 +20,9 @@ import requests
 import os,sys
 import logging
 
+CURRENT_DIR=os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.join(CURRENT_DIR,'modules'))
+
 from html import *
 from tools import *
 from parse import *
@@ -87,7 +90,7 @@ try:
 				print "Found {}, exiting search".format(nb)
 				raise GTFOError
 		if not found: 
-			print "This is not the webpage you're looking for, move along"
+			print "I'm afraid you've seen everyting there is to see"
 			raise GTFOError
 except GTFOError:
 	post_operations()
