@@ -57,9 +57,14 @@ listIdParsed=[]
 ht=hCreate(save_name)
 hHeader(ht)
 
+def post_operations():
+	parsr.max_page=page_nb+1
+	parsr.name_me()
+
 # Parsing
 try:
 	for page_nb in xrange(start_page,pages_to_process):
+		found=False
 		print "  > Processing page {} of {}".format(page_nb+1,pages_to_process)
 		#print get_page_number(to_fetch,t_npage,nb,post_per_page)
 		r=requests.get(get_page_number(to_fetch,t_npage,page_nb,post_per_page))
@@ -70,6 +75,7 @@ try:
 		
 		soup=BeautifulSoup(text,"html5lib")
 		for nb,link,pict in find_next_picture(soup,parsr.mx):
+			found=True
 			if check:
 				tst=requests.head(pict)
 				if tst.status_code>=300:
@@ -79,15 +85,15 @@ try:
 				listIdParsed.append(nb)
 			if nb==parsr.mx: 
 				print "Found {}, exiting search".format(nb)
-				parsr.max_page=page_nb+1
-				parsr.name_me()
 				raise GTFOError
+		if not found: 
+			print "This is not the webpage you're looking for, move along"
+			raise GTFOError
 except GTFOError:
-	pass
+	post_operations()
 except KeyboardInterrupt:
 	print "Not cool... you killed me dude, NOT cool..."
-	parsr.max_page=page_nb+1
-	parsr.name_me()
+	post_operations()
 except:
 	logging.exception("Unknown error")
 
