@@ -1,5 +1,5 @@
 edit:
-	geany *.py html/*.py README.md makefile
+	geany *.py modules/*.py README.md makefile&
 
 clean:
 	rm html/*.html

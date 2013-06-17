@@ -38,7 +38,7 @@ t_tag="&tags="
 tr_dict={"*":"%2a",">":"%3e","<":"%3c",":":"%3a"}
 # Fetching new page
 t_npage="&pid="
-post_per_page=20
+post_per_page=40
 
 ############
 # Fetching vars
@@ -69,7 +69,7 @@ try:
 	for page_nb in xrange(start_page,pages_to_process):
 		found=False
 		print "  > Processing page {} of {}".format(page_nb+1,pages_to_process)
-		#print get_page_number(to_fetch,t_npage,nb,post_per_page)
+		print "  > [NAME] ",get_page_number(to_fetch,t_npage,page_nb,post_per_page)
 		r=requests.get(get_page_number(to_fetch,t_npage,page_nb,post_per_page))
 		r.raise_for_status()
 		text=r.text
@@ -78,6 +78,7 @@ try:
 		
 		soup=BeautifulSoup(text,"html5lib")
 		for nb,link,pict in find_next_picture(soup,parsr.mx):
+			print "  > [ID]",nb
 			found=True
 			if check:
 				tst=requests.head(pict)
@@ -92,6 +93,7 @@ try:
 		if not found: 
 			print "I'm afraid you've seen everyting there is to see"
 			raise GTFOError
+		
 except GTFOError:
 	post_operations()
 except KeyboardInterrupt:
