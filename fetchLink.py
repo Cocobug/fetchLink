@@ -35,18 +35,17 @@ from bs4 import BeautifulSoup
 t_website="http://safebooru.org/index.php?page=post&s=list"
 t_base_website=t_website[:t_website[7:].find('/')+7]
 t_tag="&tags="
-tr_dict={"*":"%2a",">":"%3e","<":"%3c",":":"%3a"}
 # Fetching new page
 t_npage="&pid="
 post_per_page=40
 
 ############
 # Fetching vars
-parsr=parse_vars(sys.argv,tr_dict)
+parsr=parse_vars(sys.argv)
 l_tags=parsr.tags
-pages_to_process=parsr.max_page
-start_page=parsr.start_page
-check=parsr.check
+pages_to_process=parsr.stop
+start_page=parsr.start
+#check=parsr.check ?
 
 # Saving results
 save_name=parsr.save_name
@@ -62,36 +61,35 @@ hHeader(ht)
 
 def post_operations():
 	parsr.max_page=page_nb+1
-	parsr.name_me()
-
+	name(parsr)
+	
 # Parsing
 try:
 	for page_nb in xrange(start_page,pages_to_process):
 		found=False
-		print "  > Processing page {} of {}".format(page_nb+1,pages_to_process)
-		print "  > [NAME] ",get_page_number(to_fetch,t_npage,page_nb,post_per_page)
+		if parsr.verbose>0:
+			print "  > Processing page {} of {}".format(page_nb+1,pages_to_process)
+			print "  > [NAME] ",get_page_number(to_fetch,t_npage,page_nb,post_per_page)
 		r=requests.get(get_page_number(to_fetch,t_npage,page_nb,post_per_page))
 		r.raise_for_status()
 		text=r.text
-		
-		#with open(save_name) as r: text=unicode(r.read())
-		
+				
 		soup=BeautifulSoup(text,"html5lib")
-		for nb,link,pict in find_next_picture(soup,parsr.mx):
-			print "  > [ID]",nb
+		for nb,link,pict in find_next_picture(soup,parsr.find):
+			if parsr.verbose>1: print "  > [ID]",nb
 			found=True
-			if check:
+			if parsr.check_links:
 				tst=requests.head(pict)
 				if tst.status_code>=300:
 					continue
 			if nb not in listIdParsed:
 				hAddline(ht,nb,make_link(t_website,link),pict,make_delete_link(t_base_website,nb))
 				listIdParsed.append(nb)
-			if nb==parsr.mx: 
-				print "Found {}, exiting search".format(nb)
+			if nb==parsr.find: 
+				if parsr.verbose>0: print "Found {}, exiting search".format(nb)
 				raise GTFOError
 		if not found: 
-			print "I'm afraid you've seen everyting there is to see"
+			if parsr.verbose>0: print "I'm afraid you've seen everyting there is to see"
 			raise GTFOError
 		
 except GTFOError:
