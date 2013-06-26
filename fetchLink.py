@@ -16,91 +16,32 @@
 #  GNU General Public License for more details.
 #  
 
-import requests
 import os,sys
 import logging
+from bs4 import BeautifulSoup
 
 CURRENT_DIR=os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(CURRENT_DIR,'modules'))
 
-from html import *
-from tools import *
 from parse import *
+import fetch
 
-from bs4 import BeautifulSoup
 
-############
-# Website skeleton
-# Constructing url
-t_website="http://safebooru.org/index.php?page=post&s=list"
-t_base_website=t_website[:t_website[7:].find('/')+7]
-t_tag="&tags="
-# Fetching new page
-t_npage="&pid="
-post_per_page=40
 
 ############
-# Fetching vars
-parsr=parse_vars(sys.argv)
-l_tags=parsr.tags
-pages_to_process=parsr.stop
-start_page=parsr.start
-#check=parsr.check ?
-
-# Saving results
-save_name=parsr.save_name
-print 'Results will be saved in "'+save_name+'"'
-to_fetch=build_request(t_website,t_tag,l_tags)
-
-#########
-# Html creation
-listIdParsed=[]
-# Initialisation
-ht=hCreate(save_name)
-hHeader(ht)
-
-def post_operations():
-	parsr.max_page=page_nb+1
-	name(parsr)
+# Modules to be implemented
+def history(p,w):
+	print "Not implemented yet"
 	
-# Parsing
-try:
-	for page_nb in xrange(start_page,pages_to_process):
-		found=False
-		if parsr.verbose>0:
-			print "  > Processing page {} of {}".format(page_nb+1,pages_to_process)
-			print "  > [NAME] ",get_page_number(to_fetch,t_npage,page_nb,post_per_page)
-		r=requests.get(get_page_number(to_fetch,t_npage,page_nb,post_per_page))
-		r.raise_for_status()
-		text=r.text
-				
-		soup=BeautifulSoup(text,"html5lib")
-		for nb,link,pict in find_next_picture(soup,parsr.find):
-			if parsr.verbose>1: print "  > [ID]",nb
-			found=True
-			if parsr.check_links:
-				tst=requests.head(pict)
-				if tst.status_code>=300:
-					continue
-			if nb not in listIdParsed:
-				hAddline(ht,nb,make_link(t_website,link),pict,make_delete_link(t_base_website,nb))
-				listIdParsed.append(nb)
-			if nb==parsr.find: 
-				if parsr.verbose>0: print "Found {}, exiting search".format(nb)
-				raise GTFOError
-		if not found: 
-			if parsr.verbose>0: print "I'm afraid you've seen everyting there is to see"
-			raise GTFOError
-		
-except GTFOError:
-	post_operations()
-except KeyboardInterrupt:
-	print "Not cool... you killed me dude, NOT cool..."
-	post_operations()
-except:
-	logging.exception("Unknown error")
+def update(p,w):
+	print "Not implemented yet"
 
-# Finishing
-hFooter(ht)
-hClose(ht,save_name,parsr.save_name)
+###################
+# Website skeleton
+class Website(object):
+	pass
 
+actions={'fetch':fetch.fetch_it,'history':history,'update':update}
+parsr=parse_vars(sys.argv)
+website=Website()
+actions[parsr.action](parsr,website)

@@ -16,14 +16,22 @@ You'll need either pip or easy_install in order to get the following python pack
 
 Usage
 ===========
-  `./fetchLink <nbPagesToFetch> <listOfTags> [?imageMax] [%pageToStartWith] [@]`
+  `fetchLink.py [-h] [--start START] [--find FIND] [--name NAME]
+                    [--check-links] [--verbose] [--website WEBSITE]
+                    [--admin-tools] [--fetch-pictures] [--fetch-thumbnails]
+                    {fetch,show,update,repeat} nb_pages [tags [tags ...]]`
 
-Fetch all the pages from the first one to <nbPagesToFetch>, following the tag(s) <listOfTags>
+Fetch all the pages from the first one to <nb_pages>, according to the tag(s) provided
 The following options are optionals: 
-* ?<idOfAPicture> : the script will stop when finding the picture <idOfAPicture>
-* %<pageNumber> : the script will start at <pageNumber> instead of first page
-* @<nb> : (<nb>=0) Check if the picture actually exists before adding it, (<nb>=1) check if the page referencing the picture actually exists
-
+* `--start / -s START` : the script will start at <START> instead of first page
+* `--find FIND` : the script will stop when finding the picture <FIND>
+* `--name NAME` : custom naminging (you can use {tags}, {start} and {stop})
+* `--check-links` : Check if the picture actually exists before adding it
+* `--website WEBSITE` : Pick a website to fetch from
+* `--admin-tools` : Add the admin tools (if available)
+* `--fetch-pictures` : Fetch the pictures and save them in a folder (NotYetImplemented)
+* `--fetch-thumbnails` : Fetch the thumbs and save them in a folder (NotYetImplemented)
+* `--verbose / -v` : Increase verbosity (1: help - 2: debug)
 Configuring
 ==========
 
