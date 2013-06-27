@@ -52,13 +52,15 @@ def hHeader(f):
 		<th> Delete link </th>
 	""")
 
-def hAddline(f,num,text,pict,delete_link):
+def hAddline(f,num,link,pict,website,parser):
+	if parser.admin_tools: delete= "<td>"+website.make_delete_link(pict)+"</td>"
+	else: delete=""
 	f.write("""\n<tr>
-		<td> {} </td>
-		<td><a href='{}' target="_blank"> <img src='{}' onerror="imgError(this);"></a></td>
-		<td> {} </td>
+		<td> {num} </td>
+		<td><a href='{link}' target="_blank"> <img src='{pict}' onerror="imgError(this);"></a></td>
+		{delete}
 	</tr>
-	""".format(num,text,pict,delete_link))
+	""".format(num=num,link=website.make_link(link),pict=pict,delete=delete))
 
 def hFooter(f):
 	f.write("</table><p/><img src='python-powered.png'></center></body></html>")

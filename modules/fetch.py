@@ -1,6 +1,6 @@
-# -*- coding: utf-8 --
+# -*- coding: utf-8 -*-
 #
-#  main.py
+#  fetch.py
 #  
 #  Copyright 2012 Maximilien Rigaut <max[dot]rigaut[at]orange.fr>
 #  
@@ -24,51 +24,39 @@ import logging
 import requests
 
 # Constructing url
-t_website="http://safebooru.org/index.php?page=post&s=list"
-t_base_website=t_website[:t_website[7:].find('/')+7]
+#t_website="http://safebooru.org/index.php?page=post&s=list"
+#t_base_website=t_website[:t_website[7:].find('/')+7]
 t_tag="&tags="
-# Fetching new page
-t_npage="&pid="
-post_per_page=40
 	
 def fetch_it(parsr,website):
 	parsr=parse.update(parsr) # Update the values
 	save_name=parsr.save_name
 	print 'Results will be saved in "'+save_name+'"'
-	to_fetch=build_request(t_website,t_tag,parsr.tags)
-	#########
-	# Html creation
+	to_fetch=website.build_request(parsr.tags)
 	listIdParsed=[]
-	# Initialisation
 	ht=hCreate(save_name)
 	hHeader(ht)
-
-	def post_operations():
-		parsr.stop=page_nb+1
-		parse.name(parsr)
-		
-	# Parsing
+	
 	try:
-		for page_nb in xrange(parsr.start,parsr.stop):
+		for page_nb in xrange(parsr.start,parsr.stop+1):
 			found=False
 			if parsr.verbose>0:
-				print "  > Processing page {} of {}".format(page_nb+1,parsr.stop)
-				print "  > [NAME] ",get_page_number(to_fetch,t_npage,page_nb,post_per_page)
-			r=requests.get(get_page_number(to_fetch,t_npage,page_nb,post_per_page))
+				print "  > Processing page {} of {}".format(page_nb+1,parsr.stop+1) # Index start at 0
+				print "  > [NAME] ",website.get_page_number(to_fetch,page_nb)
+			r=requests.get(website.get_page_number(to_fetch,page_nb))
 			r.raise_for_status()
-			text=r.text
 					
-			soup=BeautifulSoup(text,"html5lib")
-			for nb,link,pict in find_next_picture(soup,parsr.find):
+			soup=BeautifulSoup(r.text,"html5lib")
+			for nb,link,pict in website.find_next_picture(soup,parsr.find):
 				if parsr.verbose>1: print "  > [ID]",nb
 				found=True
 				if parsr.check_links: # Find a better testing
 					tst=requests.head(pict)
 					if tst.status_code>=300: continue
-				if nb not in listIdParsed:
-					hAddline(ht,nb,make_link(t_website,link),pict,make_delete_link(t_base_website,nb))
+				if nb not in listIdParsed: # Maybe it's getting useless...
+					hAddline(ht,nb,link,pict,website,parsr)
 					listIdParsed.append(nb)
-				if nb==parsr.find: 
+				if nb==parsr.find:
 					if parsr.verbose>0: print "Found {}, exiting search".format(nb)
 					raise GTFOError
 			if not found: 
@@ -81,7 +69,11 @@ def fetch_it(parsr,website):
 		post_operations()
 	except:
 		logging.exception("Unknown error")
-
+	
 	# Finishing
 	hFooter(ht)
 	hClose(ht,save_name,parsr.save_name)
+
+def post_operations():
+		parsr.stop=page_nb+1
+		parse.name(parsr)

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #
-#  tools.py
+#  default.py
 #  
-#  Copyright 2013 Maximilien Rigaut <max[dot]rigaut[at]orange.fr>
+#  Copyright 2012 Maximilien Rigaut <max[dot]rigaut[at]orange.fr>
 #  
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -15,5 +15,16 @@
 #  GNU General Public License for more details.
 #  
 
-class GTFOError(Exception):
-	pass
+from importlib import import_module
+import safebooru as website
+import logging
+
+default_name="safebooru"
+
+def load_website(parser):
+	if parser.website=="": parser.website=default_name
+	try:
+		return import_module('.'+parser.website,'websites')
+	except:
+		logging.exception("Website {} was not loaded".format(parser.website))
+	

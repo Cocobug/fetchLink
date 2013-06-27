@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 --
+# -*- coding: utf-8 -*-
 #
 #  main.py
 #  
@@ -17,16 +17,9 @@
 #  
 
 import os,sys
-import logging
 from bs4 import BeautifulSoup
-
-CURRENT_DIR=os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.join(CURRENT_DIR,'modules'))
-
-import parse
-import fetch
-
-
+from modules import parse,fetch
+from websites import default as Website
 
 ############
 # Modules to be implemented
@@ -36,12 +29,8 @@ def history(p,w):
 def repeat(p,w):
 	print "Not implemented yet"
 
-###################
-# Website skeleton
-class Website(object):
-	pass
-
 actions={'fetch':fetch.fetch_it,'history':history,'repeat':repeat}
 parser=parse.parser.parse_args()
-website=Website()
+website=Website.load_website(parser)
+print parser.admin_tools
 actions[parser.action](parser,website)

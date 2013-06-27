@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #
-#  tools.py
+#  __init__.py
 #  
-#  Copyright 2013 Maximilien Rigaut <max[dot]rigaut[at]orange.fr>
+#  Copyright 2012 Maximilien Rigaut <max[dot]rigaut[at]orange.fr>
 #  
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -15,5 +15,4 @@
 #  GNU General Public License for more details.
 #  
 
-class GTFOError(Exception):
-	pass
+__all__ = ['fetch','html','parse','tools']
