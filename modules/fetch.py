@@ -32,15 +32,10 @@ t_npage="&pid="
 post_per_page=40
 	
 def fetch_it(parsr,website):
-	############
-	# Fetching vars
-	l_tags=parsr.tags
-	pages_to_process=parsr.stop
-	start_page=parsr.start
-	# Saving results
+	parsr=parse.update(parsr) # Update the values
 	save_name=parsr.save_name
 	print 'Results will be saved in "'+save_name+'"'
-	to_fetch=build_request(t_website,t_tag,l_tags)
+	to_fetch=build_request(t_website,t_tag,parsr.tags)
 	#########
 	# Html creation
 	listIdParsed=[]
@@ -54,10 +49,10 @@ def fetch_it(parsr,website):
 		
 	# Parsing
 	try:
-		for page_nb in xrange(start_page,pages_to_process):
+		for page_nb in xrange(parsr.start,parsr.stop):
 			found=False
 			if parsr.verbose>0:
-				print "  > Processing page {} of {}".format(page_nb+1,pages_to_process)
+				print "  > Processing page {} of {}".format(page_nb+1,parsr.stop)
 				print "  > [NAME] ",get_page_number(to_fetch,t_npage,page_nb,post_per_page)
 			r=requests.get(get_page_number(to_fetch,t_npage,page_nb,post_per_page))
 			r.raise_for_status()
@@ -67,10 +62,9 @@ def fetch_it(parsr,website):
 			for nb,link,pict in find_next_picture(soup,parsr.find):
 				if parsr.verbose>1: print "  > [ID]",nb
 				found=True
-				if parsr.check_links:
+				if parsr.check_links: # Find a better testing
 					tst=requests.head(pict)
-					if tst.status_code>=300:
-						continue
+					if tst.status_code>=300: continue
 				if nb not in listIdParsed:
 					hAddline(ht,nb,make_link(t_website,link),pict,make_delete_link(t_base_website,nb))
 					listIdParsed.append(nb)

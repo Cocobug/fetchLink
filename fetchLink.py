@@ -23,7 +23,7 @@ from bs4 import BeautifulSoup
 CURRENT_DIR=os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(CURRENT_DIR,'modules'))
 
-from parse import *
+import parse
 import fetch
 
 
@@ -33,7 +33,7 @@ import fetch
 def history(p,w):
 	print "Not implemented yet"
 	
-def update(p,w):
+def repeat(p,w):
 	print "Not implemented yet"
 
 ###################
@@ -41,7 +41,7 @@ def update(p,w):
 class Website(object):
 	pass
 
-actions={'fetch':fetch.fetch_it,'history':history,'update':update}
-parsr=parse_vars(sys.argv)
+actions={'fetch':fetch.fetch_it,'history':history,'repeat':repeat}
+parser=parse.parser.parse_args()
 website=Website()
-actions[parsr.action](parsr,website)
+actions[parser.action](parser,website)
