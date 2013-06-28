@@ -34,8 +34,7 @@ commons.add_argument('--website', help='website to fetch from',default="")
 admin_tools = commons.add_mutually_exclusive_group()
 admin_tools.add_argument('--admin-tools', help='add the tools for administration',action='store_true',default=True)
 admin_tools.add_argument('--no-admin-tools',dest='admin_tools', help='forbid the tools for administration',action='store_false')
-
-#parser_fetch.add_argument('--pretty', help='custom css')
+commons.add_argument('--pretty', help='customizing the output result',choices=["table","none"],default="table")
 commons.add_argument('--fetch-pictures', help='fetch the picture and save them in a folder',action='store_true')
 commons.add_argument('--fetch-thumbnails', help='fetch the thumbs and save them in a folder',action='store_true')
 
@@ -51,7 +50,7 @@ def name(prs):
 	name=''
 	for tag in prs.tags:
 		name+=make_site_compliant(tag)+'_'
-	prs.save_name=prs.name.format(tags=name,start=prs.start,stop=prs.stop,site=prs.website)
+	prs.save_name=prs.name.format(tags=name,start=prs.start+1,stop=prs.stop+1,site=prs.website)
 	prs.save_name=os.path.join("html",prs.save_name)
 	
 def update(prs):

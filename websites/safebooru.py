@@ -21,10 +21,10 @@ t_website=t_base_website+"/index.php?page=post&s=list"
 t_tag="&tags="
 t_npage="&pid="
 post_per_page=40
+delete_link="<a href='{}/public/remove.php?id={}&amp;removepost=1&amp;delete=no&amp;reason={}' target='_blank'>Delete</a>"
 
-t_dlt="<a href='{}/public/remove.php?id={}&amp;removepost=1&amp;delete=no&amp;reason={}' target='_blank'>Delete</a>"
 def make_delete_link(pict):
-	return t_dlt.format(t_base_website,pict,("Questionnable - SAD (Script Assisted Deletion)"))
+	return delete_link.format(t_base_website,pict,("Questionnable - SAD (Script Assisted Deletion)"))
 
 def build_request(tags):
 	adress=t_website

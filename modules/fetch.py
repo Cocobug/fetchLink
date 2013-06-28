@@ -17,8 +17,7 @@
 
 import os,sys
 from bs4 import BeautifulSoup
-import parse
-from html import *
+import parse, html
 from tools import *
 import logging
 import requests
@@ -30,12 +29,13 @@ t_tag="&tags="
 	
 def fetch_it(parsr,website):
 	parsr=parse.update(parsr) # Update the values
+	html.update(parsr,website) # Prettify according to arguments
 	save_name=parsr.save_name
 	print 'Results will be saved in "'+save_name+'"'
 	to_fetch=website.build_request(parsr.tags)
 	listIdParsed=[]
-	ht=hCreate(save_name)
-	hHeader(ht)
+	ht=html.hCreate(save_name)
+	html.hHeader(ht)
 	
 	try:
 		for page_nb in xrange(parsr.start,parsr.stop+1):
@@ -54,7 +54,7 @@ def fetch_it(parsr,website):
 					tst=requests.head(pict)
 					if tst.status_code>=300: continue
 				if nb not in listIdParsed: # Maybe it's getting useless...
-					hAddline(ht,nb,link,pict,website,parsr)
+					html.hAddline(ht,nb,link,pict,website,parsr)
 					listIdParsed.append(nb)
 				if nb==parsr.find:
 					if parsr.verbose>0: print "Found {}, exiting search".format(nb)
@@ -71,8 +71,8 @@ def fetch_it(parsr,website):
 		logging.exception("Unknown error")
 	
 	# Finishing
-	hFooter(ht)
-	hClose(ht,save_name,parsr.save_name)
+	html.hFooter(ht)
+	html.hClose(ht,save_name,parsr.save_name)
 
 def post_operations():
 		parsr.stop=page_nb+1

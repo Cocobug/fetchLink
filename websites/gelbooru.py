@@ -27,11 +27,7 @@ t_tag=safebooru.t_tag
 t_npage=safebooru.t_npage
 post_per_page=safebooru.post_per_page
 
-# To delete
-t_dlt="<a href='{}/public/remove.php?id={}&amp;removepost=1&amp;delete=no&amp;reason={}' target='_blank'>Delete</a>"
-def make_delete_link(pict):
-	return t_dlt.format(t_base_website,pict,("Questionnable - SAD (Script Assisted Deletion)"))
-
+delete_link=safebooru.delete_link
 build_request=safebooru.build_request
 make_link=safebooru.make_link
 get_page_number=safebooru.get_page_number

@@ -32,5 +32,4 @@ def repeat(p,w):
 actions={'fetch':fetch.fetch_it,'history':history,'repeat':repeat}
 parser=parse.parser.parse_args()
 website=Website.load_website(parser)
-print parser.admin_tools
 actions[parser.action](parser,website)
