@@ -15,4 +15,4 @@
 #  GNU General Public License for more details.
 #  
 
-__all__ = ['fetch','html','parse','tools']
+__all__ = ['fetch','html','parse','tools','save']

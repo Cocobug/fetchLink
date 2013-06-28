@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 #  parse.py
@@ -44,6 +43,8 @@ parser_fetch.add_argument('nb_pages', type=int,help='number of pages to process'
 parser_fetch.add_argument('tags', help='the list of tags to append', nargs='*')
 
 parser_hist = subparsers.add_parser('history', help='Show the history of the previous commands',parents=[commons])
+parser_hist.add_argument('nb_lines', type=int,help='number of line to show', nargs=1,default=5)
+
 parser_upda = subparsers.add_parser('update', help='Rerun an old command, with the possibility to change some options',parents=[commons])
 
 def name(prs):

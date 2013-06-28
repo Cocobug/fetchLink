@@ -18,7 +18,7 @@
 
 import os,sys
 from bs4 import BeautifulSoup
-from modules import parse,fetch
+from modules import parse,fetch,save
 from websites import default as Website
 
 ############
@@ -29,7 +29,7 @@ def history(p,w):
 def repeat(p,w):
 	print "Not implemented yet"
 
-actions={'fetch':fetch.fetch_it,'history':history,'repeat':repeat}
+actions={'fetch':fetch.fetch_it,'history':save.list,'repeat':repeat}
 parser=parse.parser.parse_args()
 website=Website.load_website(parser)
 actions[parser.action](parser,website)

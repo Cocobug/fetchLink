@@ -17,17 +17,14 @@
 
 import os,sys
 from bs4 import BeautifulSoup
-import parse, html
+import parse, html, save
 from tools import *
 import logging
 import requests
 
-# Constructing url
-#t_website="http://safebooru.org/index.php?page=post&s=list"
-#t_base_website=t_website[:t_website[7:].find('/')+7]
-t_tag="&tags="
-	
 def fetch_it(parsr,website):
+	page_nb=0
+	firstid=None
 	parsr=parse.update(parsr) # Update the values
 	html.update(parsr,website) # Prettify according to arguments
 	save_name=parsr.save_name
@@ -36,7 +33,10 @@ def fetch_it(parsr,website):
 	listIdParsed=[]
 	ht=html.hCreate(save_name)
 	html.hHeader(ht)
-	
+	def post_operations():
+		parsr.stop=page_nb
+		parse.name(parsr)
+
 	try:
 		for page_nb in xrange(parsr.start,parsr.stop+1):
 			found=False
@@ -45,11 +45,13 @@ def fetch_it(parsr,website):
 				print "  > [NAME] ",website.get_page_number(to_fetch,page_nb)
 			r=requests.get(website.get_page_number(to_fetch,page_nb))
 			r.raise_for_status()
-					
 			soup=BeautifulSoup(r.text,"html5lib")
 			for nb,link,pict in website.find_next_picture(soup,parsr.find):
 				if parsr.verbose>1: print "  > [ID]",nb
 				found=True
+				if firstid==None:
+					save.save(parsr,nb)
+					firstid=nb
 				if parsr.check_links: # Find a better testing
 					tst=requests.head(pict)
 					if tst.status_code>=300: continue
@@ -57,10 +59,10 @@ def fetch_it(parsr,website):
 					html.hAddline(ht,nb,link,pict,website,parsr)
 					listIdParsed.append(nb)
 				if nb==parsr.find:
-					if parsr.verbose>0: print "Found {}, exiting search".format(nb)
+					print "Found {}, exiting search".format(nb)
 					raise GTFOError
 			if not found: 
-				if parsr.verbose>0: print "I'm afraid you've seen everyting there is to see"
+				print "I'm afraid page {} was the last page to see".format(page_nb+1)
 				raise GTFOError	
 	except GTFOError:
 		post_operations()
@@ -73,7 +75,3 @@ def fetch_it(parsr,website):
 	# Finishing
 	html.hFooter(ht)
 	html.hClose(ht,save_name,parsr.save_name)
-
-def post_operations():
-		parsr.stop=page_nb+1
-		parse.name(parsr)
