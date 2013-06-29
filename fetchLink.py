@@ -23,13 +23,15 @@ from websites import default as Website
 
 ############
 # Modules to be implemented
-def history(p,w):
-	print "Not implemented yet"
 	
-def repeat(p,w):
-	print "Not implemented yet"
+def update(p,w):
+	save.load(p,w)
+	parser.find=parser.first_id
+	website=Website.load_website(parser)
+	actions["fetch"](parser,website)
+	#print "Not implemented yet"
 
-actions={'fetch':fetch.fetch_it,'history':save.list,'repeat':repeat}
+actions={'fetch':fetch.fetch_it,'history':save.list,'update':update}
 parser=parse.parser.parse_args()
 website=Website.load_website(parser)
 actions[parser.action](parser,website)

@@ -37,7 +37,9 @@ table="""<table border="0" cellpadding="20" style="text-align:center;">
 """
 
 picture="<a href='{link}' target='_blank'><img src='{pict}' onerror='imgError(this);'></a>"
-footer="<p/><img src='python-powered.png'></center></body></html>"
+footer="""<p/><div style='font-size:small'> Program made by Malphaet & Appleseed released under GPL v3
+<img width='50' height='20' src='python-powered.png'>
+</div></center></body></html>"""
 
 def update(parser,website):
 	global header,picture, footer,table

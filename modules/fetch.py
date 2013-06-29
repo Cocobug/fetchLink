@@ -62,7 +62,8 @@ def fetch_it(parsr,website):
 					print "Found {}, exiting search".format(nb)
 					raise GTFOError
 			if not found: 
-				print "I'm afraid page {} was the last page to see".format(page_nb+1)
+				page_nb-=1
+				print "  > [PAGE {}] No pictures were fetch".format(page_nb+1)
 				raise GTFOError	
 	except GTFOError:
 		post_operations()
