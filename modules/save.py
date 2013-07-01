@@ -40,6 +40,7 @@ def loadlines():
 		while line!='':
 			lines.append(line[:-1])
 			line,ln=f.readline(),ln+1
+		f.close()
 		return lines,ln
 	except IOError:
 		print "No history file to load..."
@@ -52,9 +53,8 @@ def list(parser,website):
 		else: mi,ma=ln+parser.nb_lines[0],ln
 		for i in xrange(max(mi,0),min(ma,ln)):
 			print i,lines[-i]
-		f.close()
 
-def load(parser,website):
+def load(parser,website,args):
 	# Initializing
 	number=parser.number[0]
 	lines,nb=loadlines()

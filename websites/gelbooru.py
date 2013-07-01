@@ -18,6 +18,7 @@
 
 t_base_website="http://gelbooru.com"
 t_website=t_base_website+"/index.php?page=post&s=list"
+message="Have fun"
 
 import safebooru
 safebooru.t_base_website=t_base_website

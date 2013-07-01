@@ -15,22 +15,18 @@
 #  GNU General Public License for more details.
 #  
 
-import os,random
+import os
 
-liste_messages=["Have fun.","Good luck.","Courage.","You can do it.","Have fun.","Good luck.","Courage.","You can do it.","Have fun.","Good luck.","Courage.","You can do it.","Have fun.","Good luck.","Courage.","You can do it.","I believe in you.","I have faith in you.","Carry on, you're on the good way.","Carry on, you're on the good way.","Never give up.","Moderators are Safebooru's defensors.","Slayerduck and me are relying on you.","We, the moderation team, are Safebooru's only hope to be totally safe one day.","You're not paid for what you're doing with money, but with all our love.","Moderator One Kennoby you are our only hope.",]
-message=random.choice(liste_messages)
-
-
-header="""<!DOCTYPE html><html><body style="font-family:helvetica;"><center>
-<script type="text/javascript">
+header="""<!DOCTYPE html><html><body style="font-family:helvetica;"><center>{functions}
+<div style="font-size:42px; padding-top:30px; color:#0000EE;"><b>fetchLink.py</b></div>
+{message}
+"""
+functions="""<script type="text/javascript">
 function imgError(image) {
 	image.parentNode.parentNode.innerHTML="<strike>Picture deleted</strike>";
 	return true;
 }
-</script>
-<div style="font-size:42px; padding-top:30px; color:#0000EE;"><b>fetchLink.py</b></div>
-<div style="font-size:14.2px; padding-bottom:30px;">"""+message+"""</div>
-"""
+</script>"""
 table="""<table border="0" cellpadding="20" style="text-align:center;">
 <th> # </th>
 <th>Thumbnail</th>
@@ -44,11 +40,13 @@ footer="""<p/><div style='font-size:small'> Program made by Malphaet & Appleseed
 def update(parser,website):
 	global header,picture, footer,table
 	if parser.pretty=="none":
+		header=header.format(functions="",message="")
 		return
 	if parser.pretty=="table":
 		if parser.admin_tools and hasattr(website,'make_delete_link'):
 			table+="<th> Delete link </th>"
-		header+=table
+		
+		header=header.format(functions=functions,message=website.message)+table
 		picture="<tr><td>{num}</td><td>"+picture+"</td>{delete}</tr>"
 		website.delete_link="<td>"+website.delete_link+"</td>"
 		footer="</table>"+footer

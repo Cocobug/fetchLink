@@ -25,7 +25,7 @@ from websites import default as Website
 # Modules to be implemented
 	
 def update(p,w):
-	save.load(p,w)
+	save.load(p,w,sys.args.split())
 	parser.find=parser.first_id
 	website=Website.load_website(parser)
 	actions["fetch"](parser,website)
