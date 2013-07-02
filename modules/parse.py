@@ -21,33 +21,33 @@ import argparse
 # Replace all dangerous characters
 tr_dict={"*":"%2a",">":"%3e","<":"%3c",":":"%3a",'/':''}
 
-parser = argparse.ArgumentParser(description='Fetch all images from a website.')
+parser = argparse.ArgumentParser(description='Fetch all, or some, images from a website.',usage="./%(prog)s fetch|history|update [options]")
 
 commons = argparse.ArgumentParser(add_help=False)
-commons.add_argument('--start','-s', type=int, help='the page to start with',default=0)
-commons.add_argument('--find', type=int, help='the id of the picture to look for')
-commons.add_argument('--name', help='custom name (you can use {tags}, {start}, {stop} and {site})',default='{site}_{tags}{start}_{stop}.html')
-commons.add_argument('--check-links', help='check for online existence',action='store_true')
-commons.add_argument('--verbose','-v', help='degree of verbosity',action='count')
-commons.add_argument('--website', help='website to fetch from',default="")
+commons.add_argument('--start','-s',metavar="#", type=int, help='the page to start with',default=0)
+commons.add_argument('--find',metavar="ID", type=int, help='the id of the picture to look for (will abort upon finding)')
+commons.add_argument('--name', help='custom name (you can use {tags}, {start}, {stop} and {site}, default is {site}_{tags}{start}_{stop}.html)',default='{site}_{tags}{start}_{stop}.html')
+commons.add_argument('--check-links', help='check for online existence (longify)',action='store_true')
+commons.add_argument('-v', help='degree of verbosity (none (default) displays almost nothing, -v displays useful infos, -v -v or -vv is debug mode)',action='count')
+commons.add_argument('--website', help='website to fetch from (requires appropriate file in website/)',default="")
 admin_tools = commons.add_mutually_exclusive_group()
-admin_tools.add_argument('--admin-tools', help='add the tools for administration',action='store_true',default=True)
+admin_tools.add_argument('--admin-tools', help='add administration tools (you need to be already logged in via web browser)',action='store_true',default=True)
 admin_tools.add_argument('--no-admin-tools',dest='admin_tools', help='forbid the tools for administration',action='store_false')
-commons.add_argument('--pretty', help='customizing the output result',choices=["table","none"],default="table")
+commons.add_argument('--pretty', help='customizing the output result',metavar="table|none",choices=["table","none"],default="table")
 commons.add_argument('--fetch-pictures', help='fetch the picture and save them in a folder',action='store_true')
-commons.add_argument('--fetch-thumbnails', help='fetch the thumbs and save them in a folder',action='store_true')
+commons.add_argument('--fetch-thumbnails', help='fetch the thumbnails and save them in a folder',action='store_true')
 
 subparsers = parser.add_subparsers(dest='action',help="List of available actions")
-parser_fetch = subparsers.add_parser('fetch', help='Fetch pictures',parents=[commons])
+parser_fetch = subparsers.add_parser('fetch', help='Fetch pictures following arguments.',parents=[commons],usage="./fetchLink.py fetch nb_pages tags [options]")
 parser_fetch.add_argument('nb_pages', type=int,help='number of pages to process', nargs=1)
 parser_fetch.add_argument('tags', help='the list of tags to append', nargs='*')
 
-parser_hist = subparsers.add_parser('history', help='Show the history of the previous commands',parents=[commons])
-parser_hist.add_argument('nb_lines', type=int,help='number of line to show', nargs=1)
+parser_hist = subparsers.add_parser('history', help='Show the history of previous commands.',usage="./fetchLink.py history nb_lines")
+parser_hist.add_argument('nb_lines', type=int,help='number of lines to load (negative values display lastest first)', nargs=1)
 
-parser_upda = subparsers.add_parser('update', help='Rerun an old command, with the possibility to change some options',
-parents=[commons])
-parser_upda.add_argument('number', type=int,help='number of the line to load', nargs=1)
+parser_upda = subparsers.add_parser('update', help='Rerun an old command, with or without changes.',
+parents=[commons],usage="./fetchLink.py update nb_pages tags [options]")
+parser_upda.add_argument('number', type=int,help='number of the line to show', nargs=1)
 
 def name(prs):
 	name=''
