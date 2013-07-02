@@ -35,12 +35,13 @@ def history(p,w):
 		save.list(p,w)
 	
 def update(p,w):
-	save.load(p,w,sys.argv)
-	parser.find=parser.first_id
+	parser=save.load(p,w,sys.argv)
+	if p.find!=None:parser.find=parser.first_id
 	website=Website.load_website(parser)
 	actions["fetch"](parser,website)
 
 actions={'fetch':fetch.fetch_it,'history':history,'update':update}
 parser=parse.parser.parse_args()
-website=Website.load_website(parser)
+try: website=Website.load_website(parser)
+except: website=None
 actions[parser.action](parser,website)

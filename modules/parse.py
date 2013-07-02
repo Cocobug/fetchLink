@@ -28,7 +28,7 @@ commons.add_argument('--start','-s',metavar="#", type=int, help='the page to sta
 commons.add_argument('--find',metavar="ID", type=int, help='the id of the picture to look for (will abort upon finding)')
 commons.add_argument('--name', help='custom name (you can use {tags}, {start}, {stop} and {site}, default is {site}_{tags}{start}_{stop}.html)',default='{site}_{tags}{start}_{stop}.html')
 commons.add_argument('--check-links', help='check for online existence (longify)',action='store_true')
-commons.add_argument('-v', help='degree of verbosity (none (default) displays almost nothing, -v displays useful infos, -v -v or -vv is debug mode)',action='count')
+commons.add_argument('--verbose','-v', help='degree of verbosity (none (default) displays almost nothing, -v displays useful infos, -v -v or -vv is debug mode)',action='count')
 commons.add_argument('--website', help='website to fetch from (requires appropriate file in website/)',default="")
 admin_tools = commons.add_mutually_exclusive_group()
 admin_tools.add_argument('--admin-tools', help='add administration tools (you need to be already logged in via web browser)',action='store_true',default=True)

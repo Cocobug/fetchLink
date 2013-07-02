@@ -21,6 +21,7 @@ import logging,argparse
 
 save_file=".fl_history"
 save_patern="{website}\t{start}\t{stop}\t{first_id}\t{find}\t{pretty}\t{admin_tools}\t{tags}\t{name}\n"
+save_type=[str,int,int,int,int,str,bool,list,str]
 lines=[]
 def save(parser,firstid):
 	tags=""
@@ -61,25 +62,20 @@ def list(parser,website):
 			print i,lines[-i]
 
 def load(parsr,website,args):
-	# Initializing
 	from parse import parser
-	#parser.argument_default=argparse.SUPPRESS
-	for key in vars(parsr):
-		print key
-		print parser.get_default(key)
+	deflt={key:None for key in vars(parsr)}
+	parser.set_defaults(**deflt)
 	par=parser.parse_args(args[1:])
-	#number=par.number[0]
-	#lines,nb=loadlines()
-	print par
-	## Checking
-	#if number<0: number=nb-number
-	#if number>nb or number<0: print "This history line doesn't exist"
-	## Loading variables
-	#line=lines[number].split('\t')
-	#model=save_patern[1:-2].split('}\t{')
-	## Processing
-	#for i in xrange(len(line)):
-		#print model[i],line[i]
-		#parser.__setattr__(model[i],line[i])
-	#parser.nb_pages=[parser.stop-parser.start+1]
-	#return parser,website
+	number=parsr.number[0]
+	lines,nb=loadlines()
+	if lines==0: return
+	if number<0: number=nb-number
+	if number>nb or number<0: print "This history line doesn't exist"
+	line=lines[number].split('\t')
+	model=save_patern[1:-2].split('}\t{')
+	for i in xrange(len(line)):
+		try: val=save_type[i](line[i])
+		except: pass
+		if getattr(par,line[i],None)==None: setattr(par,model[i],val)
+	par.nb_pages=[par.stop-par.start+1]
+	return par
