@@ -14,24 +14,13 @@ You'll need either pip or easy_install in order to get the following python pack
 * beautifulsoup4
 * requests
 
+The following module is no mandatory but quite advised:
+* blessings
+
 Usage
 ===========
-  `fetchLink.py [-h] [--start START] [--find FIND] [--name NAME]
-                    [--check-links] [--verbose] [--website WEBSITE]
-                    [--admin-tools] [--fetch-pictures] [--fetch-thumbnails]
-                    {fetch,show,update,repeat} nb_pages [tags [tags ...]]`
+Type `./fetchLink.py {fetch,history,update} -h` for the manual
 
-Fetch all the pages from the first one to <nb_pages>, according to the tag(s) provided
-The following options are optionals: 
-* `--start / -s START` : the script will start at <START> instead of first page
-* `--find FIND` : the script will stop when finding the picture <FIND>
-* `--name NAME` : custom naminging (you can use {tags}, {start} and {stop})
-* `--check-links` : Check if the picture actually exists before adding it
-* `--website WEBSITE` : Pick a website to fetch from
-* `--admin-tools` : Add the admin tools (if available)
-* `--fetch-pictures` : Fetch the pictures and save them in a folder (NotYetImplemented)
-* `--fetch-thumbnails` : Fetch the thumbs and save them in a folder (NotYetImplemented)
-* `--verbose / -v` : Increase verbosity (1: help - 2: debug)
 Configuring
 ==========
 
@@ -41,15 +30,14 @@ fetchLink
 ---------------
 Main application
 
-Html
----------------
-Constructing the result page
+Modules
+-------
+* _Fetch_ : Main module, all the fetching is done here
+* _Html_ : Constructing the result page
+* _Parse_ : Argument parser all command line argument are processed here
+* _Save_ : Saving the previous search to easily repeat them
+* _Tools_ : The main tools and custom errors
 
-Parse
----------------
-Argument parser, simple, ugly but working
-
-Tools
----------------
-The tools to find the pictures in webpages, forge the links to dl and so on.
-
+Website
+---------
+Each website contain the custom tools to find the pictures it's webpages, forge the links to dl and so on.

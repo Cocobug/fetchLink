@@ -22,16 +22,25 @@ from modules import parse,fetch,save
 from websites import default as Website
 
 ############
-# Modules to be implemented
+# Modules needing pre_loaders
+def history(p,w):
+	if p.sub_action=="clear":
+		try:
+			os.unlink(save.save_file)
+		except OSError:
+			pass
+		except:
+			logging.exception("Unknown")
+	else:
+		save.list(p,w)
 	
 def update(p,w):
-	save.load(p,w,sys.args.split())
+	save.load(p,w,sys.argv)
 	parser.find=parser.first_id
 	website=Website.load_website(parser)
 	actions["fetch"](parser,website)
-	#print "Not implemented yet"
 
-actions={'fetch':fetch.fetch_it,'history':save.list,'update':update}
+actions={'fetch':fetch.fetch_it,'history':history,'update':update}
 parser=parse.parser.parse_args()
 website=Website.load_website(parser)
 actions[parser.action](parser,website)
