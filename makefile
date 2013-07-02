@@ -3,3 +3,4 @@ edit:
 
 clean:
 	rm html/*.html
+	./fetchLink.py history clear

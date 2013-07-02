@@ -70,7 +70,7 @@ def hHeader(f):
 
 def hAddline(f,num,link,pict,website,parser):
 	if parser.admin_tools and hasattr(website,'make_delete_link'):
-		delete=website.make_delete_link(pict)
+		delete=website.make_delete_link(num)
 	else: delete=""
 	f.write(picture.format(num=num,link=website.make_link(link),pict=pict,delete=delete))
 
