@@ -36,7 +36,8 @@ def history(p,w):
 	
 def update(p,w):
 	parser=save.load(p,w,sys.argv)
-	if p.find!=None:parser.find=parser.first_id
+	if p.find==None: parser.find=parser.first_id
+	print p
 	website=Website.load_website(parser)
 	actions["fetch"](parser,website)
 

@@ -57,12 +57,12 @@ def update(parser,website):
 def hCreate(name):
 	if not os.path.exists("html"):
 		os.mkdir("html")
-	return open(name,"w+")
+	return open(name+".html","w+")
 
 def hClose(name,oldname,rename):
 	name.close()
 	if rename!=oldname:
-		os.rename(oldname,rename)
+		os.rename(oldname+".html",rename+".html")
 		print 'Renamed to "'+rename+'"'
 
 def hHeader(f):

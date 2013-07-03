@@ -27,7 +27,7 @@ try:
 	from blessings import Terminal
 	term = Terminal()
 	if not term.is_a_tty: raise GTFOError
-	empty="{:<"+str(min(term.width,80))+"}"
+	empty="{:<"+str(term.width)+"}"
 	def message(parsr,website,page_nb,nb,i,to_fetch,total_duration):
 		global line
 		if parsr.verbose>0:
@@ -46,7 +46,6 @@ try:
 	def init_tty(parsr,website):
 		lines=1
 		if parsr.verbose>0: lines+=2
-		#if parsr.verbose>1: lines+=website.post_per_page
 		for i in xrange(lines): print ""
 		return (parsr.stop-parsr.start+1)*website.post_per_page
 except:
@@ -60,11 +59,11 @@ except:
 		return (parsr.stop-parsr.start+1)*website.post_per_page
 
 def fetch_it(parsr,website):
-	firstid,page_nb,i=None,0,0
+	firstid,page_nb,i,find_id=None,parsr.start,0,False
 	parsr=parse.update(parsr) # Update the values
 	html.update(parsr,website) # Prettify according to arguments
 	save_name=parsr.save_name
-	print 'Results will be saved in "'+save_name+'"'
+	print 'Results will be saved in "'+save_name+'.html"'
 	to_fetch,listIdParsed=website.build_request(parsr.tags),[]
 	ht=html.hCreate(save_name)
 	html.hHeader(ht)
@@ -73,8 +72,7 @@ def fetch_it(parsr,website):
 		parse.name(parsr)
 	
 	total_duration=init_tty(parsr,website)
-	
-	if parsr.verbose>0: message(parsr,website,0,0,i,to_fetch,total_duration)
+	if parsr.verbose>0: message(parsr,website,page_nb-1,0,i,to_fetch,total_duration)
 	try:
 		for page_nb in xrange(parsr.start,parsr.stop+1):
 			found,r=False,requests.get(website.get_page_number(to_fetch,page_nb))
@@ -95,6 +93,7 @@ def fetch_it(parsr,website):
 					listIdParsed.append(nb)
 				if nb==parsr.find:
 					print "Found {}, exiting search".format(nb)
+					find_id=True
 					raise GTFOError
 			if not found: 
 				page_nb-=1
@@ -109,6 +108,8 @@ def fetch_it(parsr,website):
 		logging.exception("Unknown error")
 	
 	# Finishing
-	if parsr.verbose>0: message(parsr,website,page_nb,nb,i,to_fetch,total_duration)
+	if parsr.verbose>0:
+		message(parsr,website,page_nb,nb,i,to_fetch,total_duration)
+		if parsr.find>0 and not find_id: print "  > [FIND] Couldn't find id",parsr.find
 	html.hFooter(ht)
 	html.hClose(ht,save_name,parsr.save_name)

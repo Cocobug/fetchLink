@@ -21,12 +21,12 @@ import argparse
 # Replace all dangerous characters
 tr_dict={"*":"%2a",">":"%3e","<":"%3c",":":"%3a",'/':''}
 
-parser = argparse.ArgumentParser(description='Fetch all, or some, images from a website.',usage="./%(prog)s fetch|history|update [options]")
+parser = argparse.ArgumentParser(description='Fetch all, or some, images from a website.',usage="./%(prog)s {fetch,history,update} [options]")
 
 commons = argparse.ArgumentParser(add_help=False)
-commons.add_argument('--start','-s',metavar="#", type=int, help='the page to start with',default=0)
+commons.add_argument('--start','-s',metavar="#", type=int, help='the page to start with',default=1)
 commons.add_argument('--find',metavar="ID", type=int, help='the id of the picture to look for (will abort upon finding)')
-commons.add_argument('--name', help='custom name (you can use {tags}, {start}, {stop} and {site}, default is {site}_{tags}{start}_{stop}.html)',default='{site}_{tags}{start}_{stop}.html')
+commons.add_argument('--name', help='custom name (you can use {tags}, {start}, {stop} and {site}, default is {site}_{tags}{start}_{stop})',default='{site}_{tags}{start}_{stop}')
 commons.add_argument('--check-links', help='check for online existence (longify)',action='store_true')
 commons.add_argument('--verbose','-v', help='degree of verbosity (none (default) displays almost nothing, -v displays useful infos, -v -v or -vv is debug mode)',action='count')
 commons.add_argument('--website', help='website to fetch from (requires appropriate file in website/)',default="")
@@ -42,13 +42,13 @@ parser_fetch = subparsers.add_parser('fetch', help='Fetch pictures following arg
 parser_fetch.add_argument('nb_pages', type=int,help='number of pages to process', nargs=1)
 parser_fetch.add_argument('tags', help='the list of tags to append', nargs='*')
 
-parser_hist = subparsers.add_parser('history', help='Show the history of previous commands.',usage="./fetchLink.py history [--lines]")
+parser_hist = subparsers.add_parser('history', help='Show the history of previous commands.',usage="./fetchLink.py history {show,clear} [--lines]")
 parser_hist.add_argument('sub_action', choices=["show","clear"],help="Show or clear the history")
 parser_hist.add_argument('--lines', type=int,help='number of lines to load (negative values display lastest first)',default=-5)
 
 parser_upda = subparsers.add_parser('update', help='Rerun an old command, with or without changes.',
-parents=[commons],usage="./fetchLink.py update nb_pages tags [options]")
-parser_upda.add_argument('number', type=int,help='number of the line to show', nargs=1)
+parents=[commons],usage="./fetchLink.py update line_nb [options]")
+parser_upda.add_argument('number', type=int,help='the of history to update', nargs=1)
 
 def name(prs):
 	name=''
@@ -59,6 +59,7 @@ def name(prs):
 	
 def update(prs):
 	prs.nb_pages=prs.nb_pages[0]-1 # Index starts to 0
+	prs.start-=1
 	prs.tags.sort()
 	prs.stop=prs.start+prs.nb_pages
 	name(prs)
