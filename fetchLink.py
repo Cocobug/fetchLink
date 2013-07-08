@@ -44,5 +44,6 @@ def update(p,w):
 actions={'fetch':fetch.fetch_it,'history':history,'update':update}
 parser=parse.parser.parse_args()
 try: website=Website.load_website(parser)
-except: website=None
+except ImportError: sys.exit()
+except: logging.exception("Unknown error")
 actions[parser.action](parser,website)

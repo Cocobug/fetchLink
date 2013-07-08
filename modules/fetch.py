@@ -15,12 +15,10 @@
 #  GNU General Public License for more details.
 #  
 
-import os,sys
+import os,sys,logging,requests,random
 from bs4 import BeautifulSoup
 import parse, html, save
 from tools import *
-import logging
-import requests
 
 # Verbosity 
 try:
@@ -28,7 +26,7 @@ try:
 	term = Terminal()
 	if not term.is_a_tty: raise GTFOError
 	empty="{:<"+str(term.width)+"}"
-	def message(parsr,website,page_nb,nb,i,to_fetch,total_duration):
+	def message(parsr,website,page_nb,nb,i,to_fetch,total_duration,verbosity):
 		global line
 		if parsr.verbose>0:
 			with term.location(0,term.height-4):
@@ -49,17 +47,17 @@ try:
 		for i in xrange(lines): print ""
 		return (parsr.stop-parsr.start+1)*website.post_per_page
 except:
-	def message(parsr,website,page_nb,nb,i,to_fetch,total_duration):
-		if parsr.verbose>0:
+	def message(parsr,website,page_nb,nb,i,to_fetch,total_duration,verbosity):
+		if verbosity==1:
 			print "  > Processing page {} of {}".format(page_nb+1,parsr.stop+1) # Index start at 0
 			print "  > [NAME] ",website.get_page_number(to_fetch,page_nb)
-		if parsr.verbose>1:
+		if parsr.verbose>1 and verbosity==2:
 			print "  > [ID]",nb
-	def init_tty(parsr):
+	def init_tty(parsr,website):
 		return (parsr.stop-parsr.start+1)*website.post_per_page
 
 def fetch_it(parsr,website):
-	firstid,page_nb,i,find_id=None,parsr.start,0,False
+	firstid,page_nb,i,nb,find_id=None,parsr.start,0,0,False
 	parsr=parse.update(parsr) # Update the values
 	html.update(parsr,website) # Prettify according to arguments
 	save_name=parsr.save_name
@@ -72,16 +70,17 @@ def fetch_it(parsr,website):
 		parse.name(parsr)
 	
 	total_duration=init_tty(parsr,website)
-	if parsr.verbose>0: message(parsr,website,page_nb-1,0,i,to_fetch,total_duration)
+	#message(parsr,website,page_nb-1,0,i,to_fetch,total_duratiosn,1)
 	try:
 		for page_nb in xrange(parsr.start,parsr.stop+1):
+			parsr.wait_fn(parsr)
 			found,r=False,requests.get(website.get_page_number(to_fetch,page_nb))
 			r.raise_for_status()
 			soup=BeautifulSoup(r.text,"html5lib")
-			if parsr.verbose>0: message(parsr,website,page_nb,0,i,to_fetch,total_duration)
+			message(parsr,website,page_nb,0,i,to_fetch,total_duration,1)
 			for nb,link,pict in website.find_next_picture(soup,parsr.find):
 				found,i=True,i+1
-				if parsr.verbose>1: message(parsr,website,page_nb,nb,i,to_fetch,total_duration)
+				message(parsr,website,page_nb,nb,i,to_fetch,total_duration,2)
 				if firstid==None:
 					save.save(parsr,nb)
 					firstid=nb
@@ -109,7 +108,7 @@ def fetch_it(parsr,website):
 	
 	# Finishing
 	if parsr.verbose>0:
-		message(parsr,website,page_nb,nb,i,to_fetch,total_duration)
+		message(parsr,website,page_nb,nb,i,to_fetch,total_duration,1)
 		if parsr.find>0 and not find_id: print "  > [FIND] Couldn't find id",parsr.find
 	html.hFooter(ht)
 	html.hClose(ht,save_name,parsr.save_name)

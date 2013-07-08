@@ -15,7 +15,7 @@
 #  GNU General Public License for more details.
 #  
 
-import sys,os
+import sys,os,time,random
 import argparse
 
 # Replace all dangerous characters
@@ -34,8 +34,10 @@ admin_tools = commons.add_mutually_exclusive_group()
 admin_tools.add_argument('--admin-tools', help='add administration tools (you need to be already logged in via web browser)',action='store_true',default=True)
 admin_tools.add_argument('--no-admin-tools',dest='admin_tools', help='forbid the tools for administration',action='store_false')
 commons.add_argument('--pretty', help='customizing the output result',metavar="table|none",choices=["table","none"],default="table")
-commons.add_argument('--fetch-pictures', help='fetch the picture and save them in a folder',action='store_true')
-commons.add_argument('--fetch-thumbnails', help='fetch the thumbnails and save them in a folder',action='store_true')
+commons.add_argument('--wait', help='waiting an amout of seconds between each request',type=int,default=0)
+commons.add_argument('--random', help='waiting a random amount of time between each request',type=int,default=0)
+#commons.add_argument('--fetch-pictures', help='fetch the picture and save them in a folder',action='store_true')
+#commons.add_argument('--fetch-thumbnails', help='fetch the thumbnails and save them in a folder',action='store_true')
 
 subparsers = parser.add_subparsers(dest='action',help="List of available actions")
 parser_fetch = subparsers.add_parser('fetch', help='Fetch pictures following arguments.',parents=[commons],usage="./fetchLink.py fetch nb_pages tags [options]")
@@ -56,12 +58,23 @@ def name(prs):
 		name+=make_site_compliant(tag)+'_'
 	prs.save_name=prs.name.format(tags=name,start=prs.start+1,stop=prs.stop+1,site=prs.website)
 	prs.save_name=os.path.join("html",prs.save_name)
-	
+
+def wait_fn(prs):
+	if prs.wait+prs.random==0:
+		def w(p):
+			pass
+		return w
+	else:
+		def w(p):
+			time.sleep(max(0,random.uniform(p.wait,p.wait+p.random)))
+		return w
+			
 def update(prs):
 	prs.nb_pages=prs.nb_pages[0]-1 # Index starts to 0
 	prs.start-=1
 	prs.tags.sort()
 	prs.stop=prs.start+prs.nb_pages
+	prs.wait_fn=wait_fn(prs)
 	name(prs)
 	return prs
 

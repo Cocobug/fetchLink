@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  default.py
+#  danbooru.py
 #  
 #  Copyright 2012 Maximilien Rigaut <max[dot]rigaut[at]orange.fr>
 #  
@@ -15,18 +15,31 @@
 #  GNU General Public License for more details.
 #  
 
-from importlib import import_module
-import safebooru as website
-import logging
 
-default_name="safebooru"
+t_base_website="http://danbooru.donmai.us"
+t_website=t_base_website+"/posts"
+message="Have fun"
 
-def load_website(parser):
-	if parser.website=="": parser.website=default_name
-	try:
-		return import_module('.'+parser.website,'websites')
-	except ImportError:
-		print '  > [Error] Website "{}" was not loaded (maybe you didn\'t typed the name correctly?)'.format(parser.website)
-		raise ImportError
-	except:
-		logging.exception("Loading error on website {}".format(parser.website))
+import safebooru as model
+model.t_base_website=t_base_website
+model.t_website=t_website
+
+t_tag=model.t_tag
+t_npage="&page="
+post_per_page=20
+
+#delete_link=model.delete_link
+def build_request(tags):
+	adress=t_website
+	if len(tags)==0: return adress
+	adress+=t_tag+tags[0]
+	for t in tags[1:]:	adress+='+'+t
+	return adress
+
+make_link=model.make_link
+
+def get_page_number(page,nb):
+	if nb==0: return page
+	return page+t_npage+str(nb)
+
+find_next_picture=model.find_next_picture

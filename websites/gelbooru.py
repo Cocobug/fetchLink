@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  safebooru.py
+#  gelbooru.py
 #  
 #  Copyright 2012 Maximilien Rigaut <max[dot]rigaut[at]orange.fr>
 #  
@@ -20,16 +20,16 @@ t_base_website="http://gelbooru.com"
 t_website=t_base_website+"/index.php?page=post&s=list"
 message="Have fun"
 
-import safebooru
-safebooru.t_base_website=t_base_website
-safebooru.t_website=t_website
+import safebooru as model
+model.t_base_website=t_base_website
+model.t_website=t_website
 
-t_tag=safebooru.t_tag
-t_npage=safebooru.t_npage
-post_per_page=safebooru.post_per_page
+t_tag=model.t_tag
+t_npage=model.t_npage
+post_per_page=model.post_per_page
 
-delete_link=safebooru.delete_link
-build_request=safebooru.build_request
-make_link=safebooru.make_link
-get_page_number=safebooru.get_page_number
-find_next_picture=safebooru.find_next_picture
+delete_link=model.delete_link
+build_request=model.build_request
+make_link=model.make_link
+get_page_number=model.get_page_number
+find_next_picture=model.find_next_picture
