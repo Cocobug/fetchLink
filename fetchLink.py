@@ -16,7 +16,7 @@
 #  GNU General Public License for more details.
 #  
 
-import os,sys
+import os,sys,logging
 from bs4 import BeautifulSoup
 from modules import parse,fetch,save
 from websites import default as Website
@@ -37,7 +37,7 @@ def history(p,w):
 def update(p,w):
 	parser=save.load(p,w,sys.argv)
 	if p.find==None: parser.find=parser.first_id
-	print p
+	#print p
 	website=Website.load_website(parser)
 	actions["fetch"](parser,website)
 
@@ -45,5 +45,9 @@ actions={'fetch':fetch.fetch_it,'history':history,'update':update}
 parser=parse.parser.parse_args()
 try: website=Website.load_website(parser)
 except ImportError: sys.exit()
-except: logging.exception("Unknown error")
+except AttributeError: website=None # Not very clever, should name the error myself or avoid this
+except: 
+	logging.exception("Unknown error")
+	sys.exit()
+
 actions[parser.action](parser,website)

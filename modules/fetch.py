@@ -20,7 +20,7 @@ from bs4 import BeautifulSoup
 import parse, html, save
 from tools import *
 
-# Verbosity 
+# Printing informations to screen, depending of verbosity 
 try:
 	from blessings import Terminal
 	term = Terminal()
@@ -56,6 +56,7 @@ except:
 	def init_tty(parsr,website):
 		return (parsr.stop-parsr.start+1)*website.post_per_page
 
+# Fetching of results
 def fetch_it(parsr,website):
 	firstid,page_nb,i,nb,find_id=None,parsr.start,0,0,False
 	parsr=parse.update(parsr) # Update the values
@@ -70,7 +71,6 @@ def fetch_it(parsr,website):
 		parse.name(parsr)
 	
 	total_duration=init_tty(parsr,website)
-	#message(parsr,website,page_nb-1,0,i,to_fetch,total_duratiosn,1)
 	try:
 		for page_nb in xrange(parsr.start,parsr.stop+1):
 			parsr.wait_fn(parsr)
