@@ -36,6 +36,8 @@ admin_tools.add_argument('--no-admin-tools',dest='admin_tools', help='forbid the
 commons.add_argument('--pretty', help='customizing the output result',metavar="table|none",choices=["table","none"],default="table")
 commons.add_argument('--wait', help='waiting an amout of seconds between each request',type=int,default=0)
 commons.add_argument('--random', help='waiting a random amount of time between each request',type=int,default=0)
+commons.add_argument('--split', help='split the out every SPLIT pictures',type=int,default=0)
+#commons.add_argument('--no-blessings', help='(expert) disable the blessing module',action='store_true')
 #commons.add_argument('--fetch-pictures', help='fetch the picture and save them in a folder',action='store_true')
 #commons.add_argument('--fetch-thumbnails', help='fetch the thumbnails and save them in a folder',action='store_true')
 

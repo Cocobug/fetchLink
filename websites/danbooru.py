@@ -42,7 +42,7 @@ def make_link(link):
 
 def get_page_number(page,nb):
 	if nb==0: return page
-	return page+t_npage+str(nb)
+	return page+t_npage+str(nb+1)
 
 def find_next_picture(page,max_image):
 	for art in page.find_all("article"):

@@ -22,7 +22,7 @@ from tools import *
 
 # Printing informations to screen, depending of verbosity 
 try:
-	from blessings import Terminal
+	from blessigs import Terminal
 	term = Terminal()
 	if not term.is_a_tty: raise GTFOError
 	empty="{:<"+str(term.width)+"}"
@@ -66,9 +66,22 @@ def fetch_it(parsr,website):
 	to_fetch,listIdParsed=website.build_request(parsr.tags),[]
 	ht=html.hCreate(save_name)
 	html.hHeader(ht)
+	
 	def post_operations():
 		parsr.stop=page_nb
 		parse.name(parsr)
+	
+	def new_page(ht):
+		end=parsr.stop
+		post_operations()
+		html.hFooter(ht)
+		html.hClose(ht,save_name,parsr.save_name)
+		parsr.stop=end
+		parsr.start=page_nb
+		parse.name(parsr)
+		ht=html.hCreate(parsr.save_name)
+		html.hHeader(ht)
+		return ht
 	
 	total_duration=init_tty(parsr,website)
 	try:
@@ -94,6 +107,10 @@ def fetch_it(parsr,website):
 					print "Found {}, exiting search".format(nb)
 					find_id=True
 					raise GTFOError
+				if parsr.split!=0:
+					if i%parsr.split==0:
+						ht=new_page(ht)
+						save_name=parsr.save_name
 			if not found: 
 				page_nb-=1
 				print "  > [PAGE {}] No pictures were fetch".format(page_nb+1)
