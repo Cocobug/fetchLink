@@ -17,53 +17,22 @@
 
 import os,sys,logging,requests,random
 from bs4 import BeautifulSoup
-import parse, html, save
+import parse, html, save,verbose
 from tools import *
 
-# Printing informations to screen, depending of verbosity 
-try:
-	from blessigs import Terminal
-	term = Terminal()
-	if not term.is_a_tty: raise GTFOError
-	empty="{:<"+str(term.width)+"}"
-	def message(parsr,website,page_nb,nb,i,to_fetch,total_duration,verbosity):
-		global line
-		if parsr.verbose>0:
-			with term.location(0,term.height-4):
-				if parsr.verbose==2 and nb!=0: print " "*80
-				print empty.format("  > Processing page {} of {}".format(page_nb+1,parsr.stop+1)) # Index start at 0
-				print empty.format("  > [NAME] "+website.get_page_number(to_fetch,page_nb))
-				print ""
-		if parsr.verbose>1:
-			with term.location(0,term.height-5):
-				if nb!=0: print empty.format("  > [ID] "+str(nb))
-				print ""
-		if term!=None:
-			with term.location(0,term.height-2):
-				print "Downloading pictures [{:<40}] {:.1%} ({}/{})".format("#"*(40*i/total_duration),i*1./total_duration,i,total_duration)
-	def init_tty(parsr,website):
-		lines=1
-		if parsr.verbose>0: lines+=2
-		for i in xrange(lines): print ""
-		return (parsr.stop-parsr.start+1)*website.post_per_page
-except:
-	def message(parsr,website,page_nb,nb,i,to_fetch,total_duration,verbosity):
-		if verbosity==1:
-			print "  > Processing page {} of {}".format(page_nb+1,parsr.stop+1) # Index start at 0
-			print "  > [NAME] ",website.get_page_number(to_fetch,page_nb)
-		if parsr.verbose>1 and verbosity==2:
-			print "  > [ID]",nb
-	def init_tty(parsr,website):
-		return (parsr.stop-parsr.start+1)*website.post_per_page
-
+#############################
 # Fetching of results
+############
 def fetch_it(parsr,website):
 	firstid,page_nb,i,nb,find_id=None,parsr.start,0,0,False
 	parsr=parse.update(parsr) # Update the values
 	html.update(parsr,website) # Prettify according to arguments
+	if parsr.no_blessings: init_tty,message=verbose.bck_init_tty,verbose.bck_message
+	else: init_tty,message=verbose.init_tty,verbose.message
 	save_name=parsr.save_name
-	print 'Results will be saved in "'+save_name+'.html"'
 	to_fetch,listIdParsed=website.build_request(parsr.tags),[]
+	
+	print 'Results will be saved in "'+save_name+'.html"'
 	ht=html.hCreate(save_name)
 	html.hHeader(ht)
 	
@@ -103,12 +72,15 @@ def fetch_it(parsr,website):
 				if nb not in listIdParsed: # Maybe it's getting useless...
 					html.hAddline(ht,nb,link,pict,website,parsr)
 					listIdParsed.append(nb)
+				else:
+					print "Error on pict",i,nb
 				if nb==parsr.find:
 					print "Found {}, exiting search".format(nb)
 					find_id=True
 					raise GTFOError
 				if parsr.split!=0:
 					if i%parsr.split==0:
+						parsr.img_nb=i
 						ht=new_page(ht)
 						save_name=parsr.save_name
 			if not found: 

@@ -26,7 +26,8 @@ model.t_website=t_website
 
 t_tag=model.t_tag
 t_npage=model.t_npage
-post_per_page=model.post_per_page
+post_per_page=63
+model.post_per_page=post_per_page
 
 delete_link=model.delete_link
 build_request=model.build_request

@@ -37,7 +37,7 @@ commons.add_argument('--pretty', help='customizing the output result',metavar="t
 commons.add_argument('--wait', help='waiting an amout of seconds between each request',type=int,default=0)
 commons.add_argument('--random', help='waiting a random amount of time between each request',type=int,default=0)
 commons.add_argument('--split', help='split the out every SPLIT pictures',type=int,default=0)
-#commons.add_argument('--no-blessings', help='(expert) disable the blessing module',action='store_true')
+commons.add_argument('--no-blessings', help='(expert) disable the blessing module',action='store_true')
 #commons.add_argument('--fetch-pictures', help='fetch the picture and save them in a folder',action='store_true')
 #commons.add_argument('--fetch-thumbnails', help='fetch the thumbnails and save them in a folder',action='store_true')
 
@@ -58,7 +58,7 @@ def name(prs):
 	name=''
 	for tag in prs.tags:
 		name+=make_site_compliant(tag)+'_'
-	prs.save_name=prs.name.format(tags=name,start=prs.start+1,stop=prs.stop+1,site=prs.website)
+	prs.save_name=prs.name.format(tags=name,start=prs.start+1,stop=prs.stop+1,site=prs.website,img_nb=prs.img_nb)
 	prs.save_name=os.path.join("html",prs.save_name)
 
 def wait_fn(prs):
@@ -77,6 +77,9 @@ def update(prs):
 	prs.tags.sort()
 	prs.stop=prs.start+prs.nb_pages
 	prs.wait_fn=wait_fn(prs)
+	prs.img_nb=0
+	if prs.split!=0:
+		prs.name+="_({img_nb})"
 	name(prs)
 	return prs
 
